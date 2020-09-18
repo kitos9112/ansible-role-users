@@ -72,21 +72,9 @@
   tags:
     - configuration
 
-- name: update .bashrc file (1)
-  lineinfile:
-    path: "{{ item.home | default(users_home ~ '/' ~ item.username) }}/.bashrc'
-    regexp: '^    PS1=.*01;32m.*01;34m.*$'
-    line: '    PS1="${debian_chroot:+($debian_chroot)}\[\e[0;93m\]\u\[\e[0m\]@\[\e[38;5;208m\]\h\[\e[0m\]:\[\e[0;96m\]\w \[\e[0m\]\$ "'
-    insertafter: '^if \[ "\$color_prompt" = yes \]; then'
-    backrefs: 'yes'
-  when: (item.home_create is not defined or item.home_create |bool) and (ansible_facts['distribution'] == "Debian")
-  with_items: '{{ users }}'
-  tags:
-    - configuration
-
 - name: update .bashrc file (2)
   blockinfile:
-    path: "{{ item.home | default(users_home ~ '/' ~ item.username) }}/.bashrc'
+    path: "{{ item.home | default(users_home ~ '/' ~ item.username) }}/.bashrc"
     block: |
       alias l='ls -l'
       alias ll='ls -la'
@@ -96,7 +84,7 @@
       bind '"\e[B":history-search-forward'
       # TAB cycles through the list of partial matches
       bind 'TAB:menu-complete'
-  when: item.home_create is not defined or item.home_create
+  when: item.home_create is not defined or item.home_create |bool
   with_items: '{{ users }}'
   tags:
     - configuration
