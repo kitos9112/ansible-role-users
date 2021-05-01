@@ -45,7 +45,7 @@
     owner: "{{ item.username }}"
     group: "{{ item.group if item.group is defined else item.username }}"
     state: directory
-    mode: "0700"
+    mode: 0700
   when: item.home_create is not defined or item.home_create
   loop: "{{ users }}"
   no_log: true
